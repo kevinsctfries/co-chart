@@ -1,0 +1,16 @@
+.page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    .header {
+        padding: 1rem 2rem;
+        background-color: var(--color-surface);
+        color: var(--color-foreground);
+        border-bottom: 1px solid var(--color-muted);
+    }
+
+    .canvas {
+        flex: 1;
+    }
+}
