@@ -1,4 +1,5 @@
 import React from "react";
+import { AddNode } from "../Canvas/Controls";
 
 interface ToolbarProps {
   onAddNode: () => void;
@@ -7,7 +8,7 @@ interface ToolbarProps {
 export default function Toolbar({ onAddNode }: ToolbarProps) {
   return (
     <div>
-      <button onClick={onAddNode}>Add Node</button>
+      <AddNode onClick={onAddNode} />
     </div>
   );
 }

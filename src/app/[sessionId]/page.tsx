@@ -1,69 +1,25 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import ReactFlow, {
-  useNodesState,
-  useEdgesState,
-  addEdge,
-  Background,
-  Controls,
-  Connection,
-} from "reactflow";
-import "reactflow/dist/style.css";
+import { useParams } from "next/navigation";
+import FlowCanvas from "@/components/Canvas/FlowCanvas";
 import styles from "./page.module.scss";
-import { useEffect } from "react";
-import Toolbar from "@/components/Toolbar/Toolbar";
+import React from "react";
 
 export default function SessionPage() {
-  const sessionId = useSearchParams().get("sessionId");
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const { sessionId } = useParams();
+  const sessionIdString = Array.isArray(sessionId) ? sessionId[0] : sessionId;
 
-  const onConnect = (connection: Connection) =>
-    setEdges(eds => addEdge(connection, eds));
-
-  const addNode = () => {
-    const newNode = {
-      id: crypto.randomUUID(),
-      data: { label: "New Node" },
-      position: { x: 100, y: 100 },
-    };
-    setNodes(nds => nds.concat(newNode));
-  };
-
-  useEffect(() => {
-    const saved = localStorage.getItem(`flowchart_${sessionId}`);
-    if (saved) {
-      const { nodes, edges } = JSON.parse(saved);
-      setNodes(nodes);
-      setEdges(edges);
-    }
-  }, [sessionId, setEdges, setNodes]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      `flowchart_${sessionId}`,
-      JSON.stringify({ nodes, edges })
-    );
-  }, [nodes, edges, sessionId]);
+  if (!sessionIdString) {
+    return <div>Invalid Session</div>;
+  }
 
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <h2>Session: {sessionId}</h2>
+        <h2>Session: {sessionIdString}</h2>
       </header>
       <main className={styles.canvas}>
-        <Toolbar onAddNode={addNode} />
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          fitView>
-          <Background />
-          <Controls />
-        </ReactFlow>
+        <FlowCanvas sessionId={sessionIdString} onAddNode={() => {}} />
       </main>
     </div>
   );

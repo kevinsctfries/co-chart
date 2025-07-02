@@ -1,0 +1,11 @@
+.container {
+    height: 100%;
+    position: relative;
+
+    .addButton {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+    }
+}
