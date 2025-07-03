@@ -1,5 +1,5 @@
 import React from "react";
-import { AddNode } from "../Canvas/Controls";
+import AddNode from "../Canvas/Controls/AddNode";
 
 interface ToolbarProps {
   onAddNode: () => void;

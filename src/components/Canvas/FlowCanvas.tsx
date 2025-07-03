@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ReactFlow, {
   useNodesState,
   useEdgesState,
@@ -8,16 +8,18 @@ import ReactFlow, {
   Background,
   Controls,
   Connection,
+  Node,
+  Edge,
+  ReactFlowProvider,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import styles from "./FlowCanvas.module.scss";
 import Toolbar from "../Toolbar/Toolbar";
+import ContextMenu from "./Controls/ContextMenu";
 import EditNode from "./Controls/EditNode";
-import type { Node } from "reactflow";
 
 interface FlowCanvasProps {
   sessionId: string;
-  onAddNode: () => void;
 }
 
 const nodeTypes = { editable: EditNode };
@@ -25,47 +27,48 @@ const nodeTypes = { editable: EditNode };
 export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [menu, setMenu] = useState<{
+    id: string;
+    top?: number | false;
+    left?: number | false;
+    right?: number | false;
+    bottom?: number | false;
+  } | null>(null);
 
-  const onConnect = (connection: Connection) =>
-    setEdges(eds => addEdge(connection, eds));
-
-  const onNodeLabelChange = useCallback(
-    (id: string, newLabel: string) => {
-      setNodes(ns =>
-        ns.map(n =>
-          n.id === id
-            ? {
-                ...n,
-                data: {
-                  ...n.data,
-                  label: newLabel,
-                  onChange: onNodeLabelChange,
-                },
-              }
-            : n
-        )
-      );
-    },
-    [setNodes]
+  const onConnect = useCallback(
+    (c: Connection) => setEdges(eds => addEdge(c, eds)),
+    [setEdges]
   );
+
+  const onNodeContextMenu = useCallback((evt: React.MouseEvent, node: Node) => {
+    evt.preventDefault();
+
+    setMenu({
+      id: node.id,
+      top: evt.clientY,
+      left: evt.clientX,
+    });
+  }, []);
+
+  const onPaneClick = useCallback(() => setMenu(null), []);
 
   useEffect(() => {
     const raw = localStorage.getItem(`flowchart_${sessionId}`);
     if (!raw) return;
-
     const { nodes: savedNodes, edges: savedEdges } = JSON.parse(raw);
-    const hydrated = (savedNodes as Node[]).map(n => ({
+
+    const hydrated: Node[] = (savedNodes as Node[]).map(n => ({
       ...n,
       type: "editable",
       data: {
-        ...n.data,
-        onChange: onNodeLabelChange,
+        label: n.data.label,
+        shape: n.data.shape || "rectangle",
       },
     }));
 
     setNodes(hydrated);
-    setEdges(savedEdges);
-  }, [sessionId, setNodes, setEdges, onNodeLabelChange]);
+    setEdges(savedEdges as Edge[]);
+  }, [sessionId, setNodes, setEdges]);
 
   useEffect(() => {
     localStorage.setItem(
@@ -75,32 +78,48 @@ export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
   }, [nodes, edges, sessionId]);
 
   const addNode = useCallback(() => {
-    const id = `${Date.now()}`;
+    const id = crypto.randomUUID();
     setNodes(nds => [
       ...nds,
       {
         id,
         type: "editable",
-        position: { x: Math.random() * 250, y: Math.random() * 250 },
-        data: { label: "New Node", onChange: onNodeLabelChange },
+        position: { x: Math.random() * 300, y: Math.random() * 300 },
+        data: {
+          label: "New Node",
+          shape: "rectangle",
+        },
       },
     ]);
-  }, [setNodes, onNodeLabelChange]);
+  }, [setNodes]);
 
   return (
-    <div className={styles.container}>
-      <Toolbar onAddNode={addNode} />
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        fitView>
-        <Background />
-        <Controls />
-      </ReactFlow>
-    </div>
+    <ReactFlowProvider>
+      <div className={styles.container}>
+        <Toolbar onAddNode={addNode} />
+
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeTypes}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onNodeContextMenu={onNodeContextMenu}
+          fitView>
+          <Background />
+          <Controls />
+        </ReactFlow>
+
+        {menu && (
+          <ContextMenu
+            onClose={onPaneClick}
+            id={menu.id}
+            top={menu.top}
+            left={menu.left}
+          />
+        )}
+      </div>
+    </ReactFlowProvider>
   );
 }
