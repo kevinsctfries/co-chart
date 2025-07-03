@@ -1,6 +1,7 @@
 // in ContextMenu.tsx
 import React, { useCallback } from "react";
 import { useReactFlow, Node } from "reactflow";
+import styles from "./ContextMenu.module.scss";
 
 interface ContextMenuProps {
   id: string;
@@ -74,19 +75,12 @@ export default function ContextMenu({
 
   return (
     <div
-      className="context-menu"
+      className={styles.contextMenu}
       style={{
-        position: "absolute",
         top: top === false ? undefined : top,
         left: left === false ? undefined : left,
         right: right === false ? undefined : right,
         bottom: bottom === false ? undefined : bottom,
-        background: "#fff",
-        border: "1px solid #ccc",
-        borderRadius: 4,
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        padding: "0.5rem",
-        zIndex: 10,
       }}
       onContextMenu={e => e.preventDefault()}>
       <button onClick={renameNode}>Rename</button>

@@ -1,0 +1,25 @@
+.contextMenu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    padding: 0.5rem;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    gap: 0.5rem;
+
+    button {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.9rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &:hover {
+            background-color: #f0f0f0;
+        }
+    }
+}
