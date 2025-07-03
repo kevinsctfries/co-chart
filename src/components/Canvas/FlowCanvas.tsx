@@ -16,13 +16,10 @@ import "reactflow/dist/style.css";
 import styles from "./FlowCanvas.module.scss";
 import Toolbar from "../Toolbar/Toolbar";
 import ContextMenu from "./Controls/ContextMenu";
-import EditNode from "./Controls/EditNode";
 
 interface FlowCanvasProps {
   sessionId: string;
 }
-
-const nodeTypes = { editable: EditNode };
 
 export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -59,7 +56,6 @@ export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
 
     const hydrated: Node[] = (savedNodes as Node[]).map(n => ({
       ...n,
-      type: "editable",
       data: {
         label: n.data.label,
         shape: n.data.shape || "rectangle",
@@ -101,7 +97,6 @@ export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
         <ReactFlow
           nodes={nodes}
           edges={edges}
-          nodeTypes={nodeTypes}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
