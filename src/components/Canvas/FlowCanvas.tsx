@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import ReactFlow, {
   useNodesState,
   useEdgesState,
@@ -11,19 +11,26 @@ import ReactFlow, {
   Node,
   Edge,
   ReactFlowProvider,
+  NodeProps,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import styles from "./FlowCanvas.module.scss";
 import Toolbar from "../Toolbar/Toolbar";
 import ContextMenu from "./Controls/ContextMenu";
+import CustomNode from "./CustomNode";
 
 interface FlowCanvasProps {
   sessionId: string;
 }
 
+// const NODE_TYPES = {
+//   default: CustomNode,
+// };
+
 export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [editingNodeId, setEditingNodeId] = useState<string | null>(null);
   const [menu, setMenu] = useState<{
     id: string;
     top?: number | false;
@@ -31,6 +38,22 @@ export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
     right?: number | false;
     bottom?: number | false;
   } | null>(null);
+
+  // const nodeTypes = useMemo(() => NODE_TYPES, []);
+
+  const nodeTypes = useMemo(
+    () => ({
+      default: (props: NodeProps) => (
+        <CustomNode
+          {...props}
+          editingNodeId={editingNodeId}
+          setEditingNodeId={setEditingNodeId}
+          setNodes={setNodes}
+        />
+      ),
+    }),
+    [editingNodeId, setEditingNodeId, setNodes]
+  );
 
   const onConnect = useCallback(
     (c: Connection) => setEdges(eds => addEdge(c, eds)),
@@ -101,6 +124,7 @@ export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
           onConnect={onConnect}
           onNodeContextMenu={onNodeContextMenu}
           onPaneClick={onPaneClick}
+          nodeTypes={nodeTypes}
           fitView>
           <Background />
           <Controls />
@@ -112,6 +136,7 @@ export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
             id={menu.id}
             top={menu.top}
             left={menu.left}
+            onStartRename={setEditingNodeId}
           />
         )}
       </div>

@@ -1,4 +1,3 @@
-// in ContextMenu.tsx
 import React, { useCallback } from "react";
 import { useReactFlow, Node } from "reactflow";
 import styles from "./ContextMenu.module.scss";
@@ -10,6 +9,7 @@ interface ContextMenuProps {
   right?: number | false;
   bottom?: number | false;
   onClose: () => void;
+  onStartRename: (id: string) => void;
 }
 
 export default function ContextMenu({
@@ -19,6 +19,7 @@ export default function ContextMenu({
   right,
   bottom,
   onClose,
+  onStartRename,
 }: ContextMenuProps) {
   const { getNode, setNodes, setEdges } = useReactFlow();
 
@@ -44,34 +45,22 @@ export default function ContextMenu({
     onClose();
   }, [id, setNodes, setEdges, onClose]);
 
-  const renameNode = useCallback(() => {
-    const newLabel = prompt("Enter new label");
-    if (newLabel != null) {
-      setNodes(nds =>
-        nds.map(n =>
-          n.id === id ? { ...n, data: { ...n.data, label: newLabel } } : n
-        )
-      );
-    }
-    onClose();
-  }, [id, setNodes, onClose]);
-
-  const changeShape = useCallback(
-    (shape: string) => {
-      setNodes(nds =>
-        nds.map(n =>
-          n.id === id
-            ? {
-                ...n,
-                data: { ...n.data, shape },
-              }
-            : n
-        )
-      );
-      onClose();
-    },
-    [id, setNodes, onClose]
-  );
+  // const changeShape = useCallback(
+  //   (shape: string) => {
+  //     setNodes(nds =>
+  //       nds.map(n =>
+  //         n.id === id
+  //           ? {
+  //               ...n,
+  //               data: { ...n.data, shape },
+  //             }
+  //           : n
+  //       )
+  //     );
+  //     onClose();
+  //   },
+  //   [id, setNodes, onClose]
+  // );
 
   return (
     <div
@@ -83,9 +72,15 @@ export default function ContextMenu({
         bottom: bottom === false ? undefined : bottom,
       }}
       onContextMenu={e => e.preventDefault()}>
-      <button onClick={renameNode}>Rename</button>
-      <button onClick={() => changeShape("rectangle")}>Rectangle</button>
-      <button onClick={() => changeShape("diamond")}>Diamond</button>
+      <button
+        onClick={() => {
+          onClose();
+          onStartRename(id);
+        }}>
+        Rename
+      </button>
+      {/* <button onClick={() => changeShape("rectangle")}>Rectangle</button> */}
+      {/* <button onClick={() => changeShape("diamond")}>Diamond</button> */}
       <button onClick={duplicateNode}>Duplicate</button>
       <button onClick={deleteNode}>Delete</button>
     </div>

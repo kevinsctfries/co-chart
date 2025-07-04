@@ -1,46 +1,44 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface RenameNodeProps {
   id: string;
   label: string;
-  x: number;
-  y: number;
   onRename: (id: string, newLabel: string) => void;
-  onClose: () => void;
+  onCancel: () => void;
 }
 
-export function RenameNode({
+export default function RenameNode({
   id,
   label,
-  x,
-  y,
   onRename,
-  onClose,
+  onCancel,
 }: RenameNodeProps) {
   const [value, setValue] = useState(label);
-  const ref = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    ref.current?.focus();
+    inputRef.current?.focus();
   }, []);
 
   const finish = () => {
-    onRename(id, value);
-    onClose();
+    if (value.trim() && value !== label) {
+      onRename(id, value.trim());
+    }
+    onCancel();
   };
 
   return (
     <input
-      ref={ref}
+      aria-label="New Label"
+      ref={inputRef}
       value={value}
       onChange={e => setValue(e.target.value)}
       onBlur={finish}
-      onKeyDown={e => e.key === "Enter" && finish()}
-      style={{
-        position: "absolute",
-        top: y,
-        left: x,
+      onKeyDown={e => {
+        if (e.key === "Enter") finish();
+        if (e.key === "Escape") onCancel();
       }}
+      style={{ width: "100%" }}
     />
   );
 }
