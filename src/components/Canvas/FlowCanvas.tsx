@@ -125,6 +125,8 @@ export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
           onNodeContextMenu={onNodeContextMenu}
           onPaneClick={onPaneClick}
           nodeTypes={nodeTypes}
+          snapToGrid
+          snapGrid={[10, 10]}
           fitView>
           <Background />
           <Controls />
