@@ -25,7 +25,7 @@ export default function SessionPage() {
         <h2>Session: {sessionIdString}</h2>
       </header>
       <main className={styles.canvas}>
-        <FlowCanvas sessionId={sessionIdString} onAddNode={() => {}} />
+        <FlowCanvas sessionId={sessionIdString} />
       </main>
     </div>
   );

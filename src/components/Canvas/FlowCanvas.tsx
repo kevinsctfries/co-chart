@@ -79,7 +79,6 @@ export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
       ...nds,
       {
         id,
-        type: "editable",
         position: { x: Math.random() * 300, y: Math.random() * 300 },
         data: {
           label: "New Node",
@@ -101,6 +100,7 @@ export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onNodeContextMenu={onNodeContextMenu}
+          onPaneClick={onPaneClick}
           fitView>
           <Background />
           <Controls />
