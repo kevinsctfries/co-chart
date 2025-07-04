@@ -18,14 +18,14 @@ import styles from "./FlowCanvas.module.scss";
 import Toolbar from "../Toolbar/Toolbar";
 import ContextMenu from "./Controls/ContextMenu";
 import CustomNode from "./CustomNode";
+import Triangle from "./Controls/Shapes/Triangle";
+import Rectangle from "./Controls/Shapes/Rectangle";
+import Parallelogram from "./Controls/Shapes/Parallelogram";
+import Trapezoid from "./Controls/Shapes/Trapezoid";
 
 interface FlowCanvasProps {
   sessionId: string;
 }
-
-// const NODE_TYPES = {
-//   default: CustomNode,
-// };
 
 export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -39,8 +39,6 @@ export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
     bottom?: number | false;
   } | null>(null);
 
-  // const nodeTypes = useMemo(() => NODE_TYPES, []);
-
   const nodeTypes = useMemo(
     () => ({
       default: (props: NodeProps) => (
@@ -51,6 +49,10 @@ export default function FlowCanvas({ sessionId }: FlowCanvasProps) {
           setNodes={setNodes}
         />
       ),
+      triangle: Triangle,
+      rectangle: Rectangle,
+      parallelogram: Parallelogram,
+      trapezoid: Trapezoid,
     }),
     [editingNodeId, setEditingNodeId, setNodes]
   );

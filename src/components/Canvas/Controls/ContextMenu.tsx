@@ -45,22 +45,26 @@ export default function ContextMenu({
     onClose();
   }, [id, setNodes, setEdges, onClose]);
 
-  // const changeShape = useCallback(
-  //   (shape: string) => {
-  //     setNodes(nds =>
-  //       nds.map(n =>
-  //         n.id === id
-  //           ? {
-  //               ...n,
-  //               data: { ...n.data, shape },
-  //             }
-  //           : n
-  //       )
-  //     );
-  //     onClose();
-  //   },
-  //   [id, setNodes, onClose]
-  // );
+  const setShapeType = useCallback(
+    (shape: string) => {
+      setNodes(nds =>
+        nds.map(n =>
+          n.id === id
+            ? {
+                ...n,
+                type: shape,
+                data: {
+                  ...n.data,
+                  shape,
+                },
+              }
+            : n
+        )
+      );
+      onClose();
+    },
+    [id, setNodes, onClose]
+  );
 
   return (
     <div
@@ -79,8 +83,12 @@ export default function ContextMenu({
         }}>
         Rename
       </button>
-      {/* <button onClick={() => changeShape("rectangle")}>Rectangle</button> */}
-      {/* <button onClick={() => changeShape("diamond")}>Diamond</button> */}
+      <button onClick={() => setShapeType("triangle")}>Triangle</button>
+      <button onClick={() => setShapeType("rectangle")}>rectangle</button>
+      <button onClick={() => setShapeType("parallelogram")}>
+        Parallelogram
+      </button>
+      <button onClick={() => setShapeType("trapezoid")}>Trapezioid</button>
       <button onClick={duplicateNode}>Duplicate</button>
       <button onClick={deleteNode}>Delete</button>
     </div>
