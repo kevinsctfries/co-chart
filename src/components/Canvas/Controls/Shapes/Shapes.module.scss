@@ -1,51 +1,41 @@
-.triangle {
+.shape {
     width: 100px;
     height: 100px;
-    background: url("./triangle.svg") no-repeat center/contain;
-    position: relative;
-    align-content: center;
 
-    div {
+    > .nodeLabel {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        word-wrap: break-word;
+        overflow: hidden;
+        line-height: 1.2;
+        font-size: 14px;
+        max-width: 80%;
+        max-height: 80%;
         display: flex;
+        align-items: center;
         justify-content: center;
     }
+}
+
+.triangle {
+    @extend .shape;
+    background-image: url("./triangle.svg");
 }
 
 .rectangle {
-    width: 100px;
-    height: 100px;
-    background: url("./rectangle.svg") no-repeat center/contain;
-    position: relative;
-    align-content: center;
-
-    div {
-        display: flex;
-        justify-content: center;
-    }
+    @extend .shape;
+    background-image: url("./rectangle.svg");
 }
 
 .parallelogram {
-    width: 100px;
-    height: 100px;
-    background: url("./parallelogram.svg") no-repeat center/contain;
-    position: relative;
-    align-content: center;
-
-    div {
-        display: flex;
-        justify-content: center;
-    }
+    @extend .shape;
+    background-image: url("./parallelogram.svg");
 }
 
 .trapezoid {
-    width: 100px;
-    height: 100px;
-    background: url("./trapezoid.svg") no-repeat center/contain;
-    position: relative;
-    align-content: center;
-
-    div {
-        display: flex;
-        justify-content: center;
-    }
+    @extend .shape;
+    background-image: url("./trapezoid.svg");
 }
