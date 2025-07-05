@@ -1,28 +1,51 @@
 .triangle {
-    width: 0;
-    height: 0;
-    border-left: 25px solid transparent;
-    border-right: 25px solid transparent;
-    border-bottom: 50px solid white;
+    width: 100px;
+    height: 100px;
+    background: url("./triangle.svg") no-repeat center/contain;
+    position: relative;
+    align-content: center;
+
+    div {
+        display: flex;
+        justify-content: center;
+    }
 }
 
 .rectangle {
-    height: 50px;
     width: 100px;
-    background-color: white;
+    height: 100px;
+    background: url("./rectangle.svg") no-repeat center/contain;
+    position: relative;
+    align-content: center;
+
+    div {
+        display: flex;
+        justify-content: center;
+    }
 }
 
 .parallelogram {
     width: 100px;
-    height: 50px;
-    transform: skew(20deg);
-    background-color: white;
+    height: 100px;
+    background: url("./parallelogram.svg") no-repeat center/contain;
+    position: relative;
+    align-content: center;
+
+    div {
+        display: flex;
+        justify-content: center;
+    }
 }
 
 .trapezoid {
-    border-bottom: 50px solid white;
-    border-left: 25px solid transparent;
-    border-right: 25px solid transparent;
-    height: 0;
-    width: 125px;
+    width: 100px;
+    height: 100px;
+    background: url("./trapezoid.svg") no-repeat center/contain;
+    position: relative;
+    align-content: center;
+
+    div {
+        display: flex;
+        justify-content: center;
+    }
 }
